@@ -350,19 +350,37 @@ function parseAndRender(items) {
   setStatus('Feed loaded \u2713', true);
 }
 
+var BIBLICAL_ORDER = ['Genesis','Exodus','Leviticus','Numbers','Deuteronomy','Joshua','Judges','Ruth','1 Samuel','2 Samuel','1 Kings','2 Kings','1 Chronicles','2 Chronicles','Ezra','Nehemiah','Esther','Job','Psalms','Psalm','Proverbs','Ecclesiastes','Song of Solomon','Song of Songs','Isaiah','Jeremiah','Lamentations','Ezekiel','Daniel','Hosea','Joel','Amos','Obadiah','Jonah','Micah','Nahum','Habakkuk','Zephaniah','Haggai','Zechariah','Malachi','Matthew','Mark','Luke','John','Acts','Romans','1 Corinthians','2 Corinthians','Galatians','Ephesians','Philippians','Colossians','1 Thessalonians','2 Thessalonians','1 Timothy','2 Timothy','Titus','Philemon','Hebrews','James','1 Peter','2 Peter','1 John','2 John','3 John','Jude','Revelation'];
+
 function uniq(arr) { return Array.from(new Set(arr.filter(Boolean))).sort(); }
 
-function populateFilters() {
-  fill('filter-speaker', uniq(allSermons.map(function(s){return s.speaker !== 'Unknown' ? s.speaker : '';})));
-  fill('filter-book',    uniq(allSermons.map(function(s){return s.book;})));
-  fill('filter-topic',   uniq(allSermons.map(function(s){return s.topic;})));
-  fill('filter-series',  uniq(allSermons.map(function(s){return s.series;})));
-  fill('filter-service', uniq(allSermons.map(function(s){return s.service;})));
+function countFor(field, val) {
+  return allSermons.filter(function(s){ return s[field] === val; }).length;
 }
-function fill(id, opts) {
+
+function populateFilters() {
+  var speakers = uniq(allSermons.map(function(s){return s.speaker !== 'Unknown' ? s.speaker : '';}));
+  var books    = allSermons.map(function(s){return s.book;}).filter(Boolean);
+  books = BIBLICAL_ORDER.filter(function(b){ return books.indexOf(b) > -1; });
+  var topics   = uniq(allSermons.map(function(s){return s.topic;}));
+  var series   = uniq(allSermons.map(function(s){return s.series;}));
+  var services = uniq(allSermons.map(function(s){return s.service;}));
+  fillWithCounts('filter-speaker', speakers, 'speaker');
+  fillWithCounts('filter-book',    books,    'book');
+  fillWithCounts('filter-topic',   topics,   'topic');
+  fillWithCounts('filter-series',  series,   'series');
+  fillWithCounts('filter-service', services, 'service');
+}
+
+function fillWithCounts(id, opts, field) {
   var el = document.getElementById(id), cur = el.value;
   while (el.options.length > 1) el.remove(1);
-  opts.forEach(function(o){ var op = document.createElement('option'); op.value = op.textContent = o; el.appendChild(op); });
+  opts.forEach(function(o){
+    var op = document.createElement('option');
+    op.value = o;
+    op.textContent = o + ' (' + countFor(field, o) + ')';
+    el.appendChild(op);
+  });
   if (opts.indexOf(cur) > -1) el.value = cur;
 }
 
