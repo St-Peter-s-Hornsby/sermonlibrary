@@ -282,16 +282,22 @@ function findBook(text) {
 }
 
 function extractMeta(text) {
-  var c = text.replace(/<[^>]+>/g, ' ');
-  var sm = c.match(/(?:speaker|preacher|preached by|by)[:\s]+([A-Z][a-z]+(?: [A-Z][a-z]+){0,2})/);
-  var srm = c.match(/(?:series|part \d+ of|in the series)[:\s"'""]+([^,.\n"'"]{3,50})/i);
-  var svm = c.match(/\b(sunday (?:morning|evening|night|service)?|evening service|morning service|9[: ]?am|10[: ]?am|11[: ]?am|6[: ]?pm|7[: ]?pm|christmas|easter|good friday|advent)\b/i);
-  var tm  = c.match(/(?:topic|theme)[:\s]+([A-Za-z][A-Za-z ]{3,35})(?:[,.\n]|$)/i);
+  // Strip HTML tags, decode entities, then match "Label: Value" lines
+  var c = text.replace(/<[^>]+>/g, '\n').replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').replace(/&#\d+;/g, ' ');
+  function field() {
+    var keys = Array.prototype.slice.call(arguments);
+    for (var k = 0; k < keys.length; k++) {
+      var re = new RegExp('(?:^|\\n)\\s*' + keys[k] + '\\s*:\\s*(.+)', 'i');
+      var m = c.match(re);
+      if (m) return m[1].trim().replace(/\s+/g, ' ').replace(/[.,;]$/, '');
+    }
+    return '';
+  }
   return {
-    speaker: sm ? sm[1].trim() : '',
-    series: srm ? srm[1].trim().replace(/["""'']$/,'') : '',
-    service: svm ? svm[0].trim().replace(/\b\w/g,function(x){return x.toUpperCase();}) : '',
-    topic: tm ? tm[1].trim().replace(/\b\w/g,function(x){return x.toUpperCase();}) : ''
+    speaker: field('speaker', 'preacher', 'preached by'),
+    series:  field('series'),
+    service: field('service'),
+    topic:   field('topic', 'theme')
   };
 }
 
@@ -303,17 +309,21 @@ function parseAndRender(items, feedChannelImage) {
   items.forEach(function(item) {
     var title = item.title || '';
     var series = item.titleSeries || '';
-    var meta = extractMeta([title, item.desc, item.speaker].join(' '));
+    // Use raw HTML description so structured fields (Speaker: / Series: / Service:) are extracted cleanly
+    var meta = extractMeta(item.rawHtml || item.desc || '');
     if (!series) series = meta.series;
     // Scan all fields for a Bible book - first match wins
     var book = findBook(title) || findBook(series) || findBook(item.desc) || findBook(item.speaker) || '';
+    // Speaker: prefer RSS itunes:author, fall back to description extraction
+    var speaker = item.speaker || meta.speaker || 'Unknown';
+    var service = meta.service;
     sermons.push({
       id: item.id, title: title,
       desc: item.desc || '',
       pubDate: item.pubDate, parsedDate: item.pubDate ? new Date(item.pubDate) : new Date(0),
       audioUrl: item.audioUrl || '', link: item.link || '', duration: item.duration || '',
-      speaker: item.speaker || meta.speaker || 'Unknown',
-      book: book, series: series, service: meta.service, topic: meta.topic,
+      speaker: speaker,
+      book: book, series: series, service: service, topic: meta.topic,
       image: item.image || '',
       videoId: item.videoId || '',
       videoUrl: item.videoUrl || ''
