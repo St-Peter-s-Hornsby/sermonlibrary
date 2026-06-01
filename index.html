@@ -222,7 +222,14 @@ footer .footer-name { color: var(--gold-light); font-weight: 500; }
 
 <script>
 var RSS_EN = 'https://anchor.fm/s/c1de3e94/podcast/rss';
-var PROXY = 'https://api.allorigins.win/get?url=';
+
+// Multiple proxies tried in order until one works
+var PROXIES = [
+  { url: 'https://api.allorigins.win/get?url={URL}', json: true, key: 'contents' },
+  { url: 'https://corsproxy.io/?url={URL}', json: false },
+  { url: 'https://api.codetabs.com/v1/proxy?quest={URL}', json: false },
+  { url: 'https://thingproxy.freeboard.io/fetch/{URL}', json: false }
+];
 var PER_PAGE = 15;
 var allSermons = [];
 var filtered = [];
@@ -237,15 +244,61 @@ function setLang(lang) {
 }
 
 async function loadFeed() {
+  for (var i = 0; i < PROXIES.length; i++) {
+    try {
+      var proxy = PROXIES[i];
+      var proxyUrl = proxy.url.replace('{URL}', encodeURIComponent(RSS_EN));
+      var res = await fetch(proxyUrl, { signal: AbortSignal.timeout(8000) });
+      if (!res.ok) continue;
+      var text;
+      if (proxy.json) {
+        var data = await res.json();
+        text = data[proxy.key];
+      } else {
+        text = await res.text();
+      }
+      if (!text || text.length < 100) continue;
+      var xml = new DOMParser().parseFromString(text, 'text/xml');
+      var parseErr = xml.querySelector('parsererror');
+      if (parseErr) continue;
+      var items = xml.querySelectorAll('item');
+      if (items.length === 0) continue;
+      parseSermons(xml);
+      return;
+    } catch(e) {
+      // try next proxy
+    }
+  }
+  // All proxies failed — show helpful error with manual option
+  showError('Could not load the sermon feed automatically. All proxies failed or were blocked. <a href="' + RSS_EN + '" target="_blank" style="color:var(--gold)">Open the RSS feed</a>, copy its contents, and paste below to load manually.');
+  showManualInput();
+  setStatus('Feed error', false);
+}
+
+function showManualInput() {
+  var existing = document.getElementById('manual-rss-input');
+  if (existing) return;
+  var div = document.createElement('div');
+  div.id = 'manual-rss-input';
+  div.style.cssText = 'background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;margin-top:1rem';
+  div.innerHTML = '<div style="font-size:12px;color:var(--ink-muted);margin-bottom:8px;letter-spacing:0.06em;text-transform:uppercase">Paste RSS feed XML manually</div>' +
+    '<textarea id="manual-rss-text" style="width:100%;height:100px;padding:8px;font-family:monospace;font-size:12px;border:1px solid var(--border-strong);border-radius:var(--radius);background:var(--parchment);color:var(--ink);resize:vertical" placeholder="Paste the full RSS XML here…"></textarea>' +
+    '<button onclick="loadManual()" style="margin-top:8px;padding:7px 16px;background:var(--ink);color:var(--gold-light);border:none;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer">Load</button>';
+  document.getElementById('error-container').appendChild(div);
+}
+
+function loadManual() {
+  var text = document.getElementById('manual-rss-text').value.trim();
+  if (!text) return;
   try {
-    var url = PROXY + encodeURIComponent(RSS_EN);
-    var res = await fetch(url);
-    var data = await res.json();
-    var xml = new DOMParser().parseFromString(data.contents, 'text/xml');
+    var xml = new DOMParser().parseFromString(text, 'text/xml');
+    var parseErr = xml.querySelector('parsererror');
+    if (parseErr) { showError('Invalid XML — please paste the raw RSS feed content.'); return; }
+    document.getElementById('error-container').innerHTML = '';
     parseSermons(xml);
+    setStatus('Feed loaded (manual) ✓', true);
   } catch(e) {
-    showError('Could not load the sermon feed. Make sure the site is published to GitHub Pages where CORS allows the proxy request. Error: ' + e.message);
-    setStatus('Feed error', false);
+    showError('Could not parse XML: ' + e.message);
   }
 }
 
