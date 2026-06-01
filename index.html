@@ -304,6 +304,14 @@ function getItunes(item, tag) {
   var n = item.getElementsByTagNameNS('http://www.itunes.com/dtds/podcast-1.0.dtd', tag)[0];
   return n ? n.textContent.trim() : '';
 }
+function findBook(text) {
+  if (!text) return '';
+  for (var i = 0; i < BIBLE_BOOKS.length; i++) {
+    if (new RegExp('\b' + BIBLE_BOOKS[i].replace(/\s/g,'\s') + '\b','i').test(text)) return BIBLE_BOOKS[i];
+  }
+  return '';
+}
+
 function extractMeta(text) {
   var c = text.replace(/<[^>]+>/g, ' ');
   var book = '';
@@ -340,6 +348,7 @@ function parseAndRender(xml) {
     var dur     = getItunes(item,'duration');
     var meta = extractMeta([title,desc,summary,sub].join(' '));
     var series = titleSeries || meta.series;
+    var book = meta.book || findBook(series) || findBook(title);
     sermons.push({
       id: idx, title: title,
       desc: (summary || desc).replace(/<[^>]+>/g,'').trim(),
@@ -347,7 +356,7 @@ function parseAndRender(xml) {
       audioUrl: enc ? enc.getAttribute('url') : '',
       link: getT(item,'link'), duration: dur,
       speaker: author || meta.speaker || 'Unknown',
-      book: meta.book, series: series, service: meta.service, topic: meta.topic
+      book: book, series: series, service: meta.service, topic: meta.topic
     });
   });
 
