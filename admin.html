@@ -170,6 +170,7 @@ header{background:var(--ink);border-bottom:2px solid var(--gold);padding:0 2rem;
     <button class="tab-btn active" id="tab-overrides" onclick="showTab('overrides')">Overrides &amp; Manual</button>
     <button class="tab-btn" id="tab-rss"       onclick="showTab('rss')">RSS Feed Preview</button>
     <button class="tab-btn" id="tab-bulk"      onclick="showTab('bulk')">Bulk Override</button>
+    <button class="tab-btn" id="tab-subscribe" onclick="showTab('subscribe')">Subscribe Links</button>
     <button class="tab-btn" id="tab-settings"  onclick="showTab('settings')">Settings &amp; Export</button>
   </div>
 
@@ -242,6 +243,19 @@ header{background:var(--ink);border-bottom:2px solid var(--gold);padding:0 2rem;
         <thead><tr><th style="width:36px"></th><th>Title</th><th>Speaker</th><th>Series</th><th>Book</th><th>Date</th></tr></thead>
         <tbody id="bulk-tbody"></tbody>
       </table>
+    </div>
+  </div>
+
+  <!-- Subscribe panel -->
+  <div id="panel-subscribe" style="display:none">
+    <div class="info-banner">
+      Add your podcast subscription URLs below. Only platforms with a URL entered will appear as buttons on the public library. Changes are saved instantly to this browser — use Export/Import in Settings to share across devices.
+    </div>
+    <div class="settings-card">
+      <h3>Subscription Links</h3>
+      <p>Enter the URL for each platform you're on. Leave blank to hide that button.</p>
+      <div id="subscribe-fields"></div>
+      <button class="btn-save" style="margin-top:1rem" onclick="saveSubscribeLinks()">Save links</button>
     </div>
   </div>
 
@@ -401,7 +415,7 @@ function getOv() { try { return JSON.parse(localStorage.getItem(OV_KEY)) || []; 
 function saveOv(arr) { localStorage.setItem(OV_KEY, JSON.stringify(arr)); }
 
 function showTab(name) {
-  ['overrides','rss','bulk','settings'].forEach(function(t){
+  ['overrides','rss','bulk','subscribe','settings'].forEach(function(t){
     document.getElementById('panel-' + t).style.display = t === name ? '' : 'none';
     document.getElementById('tab-' + t).classList.toggle('active', t === name);
   });
@@ -734,6 +748,48 @@ function findBook(text) {
 }
 function gT(el,tag){ var n=el.querySelector(tag); return n?n.textContent.trim():''; }
 function esc(s){ return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):''; }
+/* ── Subscribe Links ── */
+var SUBSCRIBE_PLATFORMS = [
+  { key:'spotify',     label:'Spotify',        placeholder:'https://open.spotify.com/show/...' },
+  { key:'apple',       label:'Apple Podcasts',  placeholder:'https://podcasts.apple.com/...' },
+  { key:'youtube',     label:'YouTube',         placeholder:'https://www.youtube.com/@StPetersHornsby' },
+  { key:'amazon',      label:'Amazon Music',    placeholder:'https://music.amazon.com/podcasts/...' },
+  { key:'google',      label:'Google Podcasts', placeholder:'https://podcasts.google.com/...' },
+  { key:'pocketcasts', label:'Pocket Casts',    placeholder:'https://pca.st/...' },
+  { key:'overcast',    label:'Overcast',        placeholder:'https://overcast.fm/...' },
+  { key:'rss',         label:'RSS Feed',        placeholder:'https://anchor.fm/s/c1de3e94/podcast/rss' },
+];
+var SUBSCRIBE_KEY = 'sph_subscribe_links';
+
+function renderSubscribeFields() {
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(SUBSCRIBE_KEY)) || {}; } catch(e) {}
+  var html = SUBSCRIBE_PLATFORMS.map(function(p) {
+    return '<div class="form-row">' +
+      '<label>' + p.label + '</label>' +
+      '<input type="url" id="sub-' + p.key + '" placeholder="' + p.placeholder + '" value="' + esc(saved[p.key] || '') + '">' +
+    '</div>';
+  }).join('');
+  document.getElementById('subscribe-fields').innerHTML = html;
+}
+
+function saveSubscribeLinks() {
+  var data = {};
+  SUBSCRIBE_PLATFORMS.forEach(function(p) {
+    var val = document.getElementById('sub-' + p.key).value.trim();
+    if (val) data[p.key] = val;
+  });
+  localStorage.setItem(SUBSCRIBE_KEY, JSON.stringify(data));
+  toast('Subscribe links saved ✓');
+}
+
+// Render fields when tab is shown
+var origShowTab = showTab;
+showTab = function(name) {
+  origShowTab(name);
+  if (name === 'subscribe') renderSubscribeFields();
+};
+
 function toast(msg){
   var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
   setTimeout(function(){ t.classList.remove('show'); },2800);
