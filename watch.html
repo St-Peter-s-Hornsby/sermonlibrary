@@ -301,8 +301,24 @@ function isNew(iso) {
   return (Date.now() - new Date(iso).getTime()) < 14 * 24 * 60 * 60 * 1000;
 }
 
-function videoCard(v, idx) {
-  return '<div class="vcard" onclick="openVideo(\'' + esc(v.id) + '\',\'' + esc(v.title.replace(/'/g,"\\'")) + '\',\'' + esc((v.desc||'').substring(0,200).replace(/'/g,"\\'")) + '\',\'' + esc(v.published) + '\')">' +
+function extractSeries(title) {
+  var parts = title.split('|');
+  return parts.length > 1 ? parts[parts.length - 1].trim() : '';
+}
+
+function cleanTitle(title) {
+  return title.split('|')[0].trim();
+}
+
+function videoCard(v, showClean) {
+  var displayTitle = showClean ? cleanTitle(v.title) : v.title;
+  var safeTitle = v.title.replace(/'/g, '&#39;');
+  var safeDesc  = (v.desc || '').substring(0, 200).replace(/'/g, '&#39;');
+  return '<div class="vcard" onclick="openVideo(' +
+      '\'' + esc(v.id) + '\',' +
+      '\'' + safeTitle + '\',' +
+      '\'' + safeDesc  + '\',' +
+      '\'' + esc(v.published) + '\')">' +
     (isNew(v.published) ? '<div class="vcard-new">New</div>' : '') +
     '<div class="vcard-thumb">' +
       (v.thumb
@@ -311,7 +327,7 @@ function videoCard(v, idx) {
       '<div class="vcard-play-overlay"><svg viewBox="0 0 16 16"><path d="M3 2.5l10 5.5-10 5.5V2.5z"/></svg></div>' +
     '</div>' +
     '<div class="vcard-info">' +
-      '<div class="vcard-title">' + esc(v.title) + '</div>' +
+      '<div class="vcard-title">' + esc(displayTitle) + '</div>' +
       '<div class="vcard-meta"><span>' + fmtDate(v.published) + '</span></div>' +
     '</div>' +
   '</div>';
@@ -325,56 +341,99 @@ function skeletonRow() {
   return html + '</div>';
 }
 
-function renderRows(playlists) {
-  var container = document.getElementById('rows-container');
-  container.innerHTML = '';
-  playlists.forEach(function(pl) {
-    var rowEl = document.createElement('div');
-    rowEl.className = 'row';
-    rowEl.id = 'row-' + pl.id;
-    rowEl.innerHTML = '<div class="row-header"><div class="row-title">' + esc(pl.label) + '</div><div class="row-count" id="count-' + pl.id + '">Loading...</div></div>' + skeletonRow();
-    container.appendChild(rowEl);
+function makeRow(id, label, videos, showClean) {
+  var rowEl = document.createElement('div');
+  rowEl.className = 'row';
+  rowEl.id = 'row-' + id;
+  var cards = videos.map(function(v) { return videoCard(v, showClean); }).join('');
+  rowEl.innerHTML =
+    '<div class="row-header">' +
+      '<div class="row-title">' + esc(label) + '</div>' +
+      '<div class="row-count">' + videos.length + ' video' + (videos.length !== 1 ? 's' : '') + '</div>' +
+    '</div>' +
+    '<div class="cards-scroll">' + cards + '</div>';
+  return rowEl;
+}
+
+function renderSeriesRows(videos, label, container) {
+  // Group by series extracted from "Title | Series" format
+  var seriesMap = {}, noSeries = [];
+  videos.forEach(function(v) {
+    var s = extractSeries(v.title);
+    if (s) {
+      if (!seriesMap[s]) seriesMap[s] = [];
+      seriesMap[s].push(v);
+    } else {
+      noSeries.push(v);
+    }
   });
+
+  var seriesKeys = Object.keys(seriesMap).sort(function(a, b) {
+    return new Date(seriesMap[b][0].published || 0) - new Date(seriesMap[a][0].published || 0);
+  });
+
+  // Latest row — 12 most recent videos
+  var latest = videos.slice().sort(function(a, b) {
+    return new Date(b.published || 0) - new Date(a.published || 0);
+  }).slice(0, 12);
+  container.appendChild(makeRow('latest-' + label, label + ' — Latest', latest, false));
+
+  // Series rows
+  seriesKeys.forEach(function(s) {
+    container.appendChild(makeRow('series-' + s, s, seriesMap[s], true));
+  });
+
+  // Unsorted
+  if (noSeries.length > 0 && seriesKeys.length > 0) {
+    container.appendChild(makeRow('other-' + label, label + ' — Other', noSeries, false));
+  }
 }
 
 async function loadPlaylists() {
   var playlists = PLAYLISTS[currentLang] || [];
   allVideos = [];
-  renderRows(playlists);
+  var container = document.getElementById('rows-container');
+  container.innerHTML = '';
+
+  // Skeleton placeholders
+  playlists.forEach(function(pl) {
+    var el = document.createElement('div');
+    el.className = 'row';
+    el.id = 'skel-' + pl.id;
+    el.innerHTML = '<div class="row-header"><div class="row-title">' + esc(pl.label) + '</div><div class="row-count">Loading...</div></div>' + skeletonRow();
+    container.appendChild(el);
+  });
 
   for (var i = 0; i < playlists.length; i++) {
     var pl = playlists[i];
+    var skel = document.getElementById('skel-' + pl.id);
     try {
       var videos = await fetchPlaylistVideos(pl.id);
-      allVideos = allVideos.concat(videos.map(function(v) { return Object.assign({}, v, { playlist: pl.label, playlistId: pl.id }); }));
+      var tagged = videos.map(function(v) { return Object.assign({}, v, { playlist: pl.label }); });
+      allVideos = allVideos.concat(tagged);
+      if (skel) skel.remove();
 
-      var rowEl = document.getElementById('row-' + pl.id);
-      if (!rowEl) continue;
-
-      if (videos.length === 0) {
-        rowEl.querySelector('.loading-row').outerHTML = '<div class="empty"><p>No videos found</p></div>';
-        document.getElementById('count-' + pl.id).textContent = '0 videos';
+      if (!videos.length) {
+        var empty = document.createElement('div');
+        empty.className = 'row';
+        empty.innerHTML = '<div class="row-header"><div class="row-title">' + esc(pl.label) + '</div></div><div class="empty"><p>No videos found</p></div>';
+        container.appendChild(empty);
         continue;
       }
 
-      document.getElementById('count-' + pl.id).textContent = videos.length + ' video' + (videos.length !== 1 ? 's' : '');
+      renderSeriesRows(tagged, pl.label, container);
 
-      var scrollDiv = document.createElement('div');
-      scrollDiv.className = 'cards-scroll';
-      scrollDiv.innerHTML = videos.map(function(v, idx) { return videoCard(v, idx); }).join('');
-      rowEl.querySelector('.loading-row').replaceWith(scrollDiv);
-
-      // Update hero with latest video from first playlist
-      if (i === 0 && videos.length > 0) updateHero(videos[0], pl.label);
-
+      if (i === 0) {
+        var hero = tagged.slice().sort(function(a,b){ return new Date(b.published||0) - new Date(a.published||0); })[0];
+        updateHero(hero, pl.label);
+      }
     } catch(e) {
-      var rowEl = document.getElementById('row-' + pl.id);
-      if (rowEl) rowEl.querySelector('.loading-row').outerHTML = '<div style="color:var(--text3);font-size:13px;padding:20px 0">Could not load videos — check your API key.</div>';
-      document.getElementById('count-' + pl.id).textContent = 'Error';
+      if (skel) skel.innerHTML = '<div class="row-header"><div class="row-title">' + esc(pl.label) + '</div></div><div style="color:var(--text3);font-size:13px;padding:20px 0">Could not load — check API key.</div>';
       console.error('Playlist error:', pl.id, e);
     }
   }
 }
+
 
 function updateHero(v, playlistLabel) {
   var hc = document.getElementById('hero-content');
