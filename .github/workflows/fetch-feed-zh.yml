@@ -1,0 +1,34 @@
+name: Fetch Mandarin Sermon Feed
+
+on:
+  schedule:
+    - cron: '15 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch Mandarin RSS feed
+        run: |
+          curl -L --fail --retry 3 --retry-delay 5 \
+               -H "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36" \
+               -o feed-zh.xml \
+               "https://podcasts.hornsbyanglican.org.au/@sph_sermons_mandarin/feed.xml"
+          echo "Downloaded $(wc -c < feed-zh.xml) bytes"
+          head -c 300 feed-zh.xml
+
+      - name: Parse Mandarin RSS to JSON
+        run: python3 parse_feed_zh.py
+
+      - name: Commit feed-zh.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add feed-zh.json
+          git diff --staged --quiet || git commit -m "chore: update Mandarin sermon feed [skip ci]"
+          git push
