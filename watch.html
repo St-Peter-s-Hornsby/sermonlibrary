@@ -8,39 +8,57 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&display=swap" rel="stylesheet">
 <style>
-:root {
+:root{
   --bg:#0a0a0a;--bg2:#141414;--bg3:#1f1f1f;--bg4:#2a2a2a;
   --text:#ffffff;--text2:#b3b3b3;--text3:#737373;
-  --border:#2a2a2a;--accent:#e50914;--accent2:#f40612;
+  --border:#2a2a2a;--accent:#e50914;
   --gold:#B8965A;--gold-light:#D4B07A;
   --radius:6px;--radius-lg:10px;
 }
+.light-mode{
+  --bg:#f5f5f5;--bg2:#ffffff;--bg3:#efefef;--bg4:#e0e0e0;
+  --text:#111111;--text2:#555555;--text3:#888888;
+  --border:#dddddd;
+}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden;transition:background 0.3s,color 0.3s}
 
 /* Nav */
-nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:0 4%;height:68px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(to bottom,rgba(0,0,0,0.9) 0%,transparent 100%);transition:background 0.3s}
-nav.scrolled{background:var(--bg2)}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:0 4%;height:68px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(to bottom,rgba(0,0,0,0.9),transparent);transition:background 0.3s}
+nav.scrolled{background:var(--bg2);border-bottom:1px solid var(--border)}
+.light-mode nav{background:var(--bg2) !important;border-bottom:1px solid var(--border)}
 .nav-logo img{height:36px;width:auto;display:block;max-width:160px;object-fit:contain}
-.nav-right{display:flex;align-items:center;gap:12px}
+.nav-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .lang-toggle{display:flex;background:rgba(255,255,255,0.1);border-radius:var(--radius);padding:3px;gap:2px}
-.lang-btn{padding:5px 14px;font-size:12px;font-family:'Inter',sans-serif;font-weight:500;border:none;background:none;color:rgba(255,255,255,0.6);border-radius:4px;cursor:pointer;transition:all 0.15s;letter-spacing:0.03em}
+.light-mode .lang-toggle{background:rgba(0,0,0,0.08)}
+.lang-btn{padding:5px 12px;font-size:12px;font-family:'Inter',sans-serif;font-weight:500;border:none;background:none;color:rgba(255,255,255,0.6);border-radius:4px;cursor:pointer;transition:all 0.15s}
+.light-mode .lang-btn{color:rgba(0,0,0,0.5)}
 .lang-btn.active{background:var(--accent);color:#fff}
 .sermons-link{font-size:13px;color:var(--text2);text-decoration:none;transition:color 0.15s}
 .sermons-link:hover{color:var(--text)}
+.theme-btn{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.1);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text);font-size:16px;transition:background 0.15s}
+.theme-btn:hover{background:rgba(255,255,255,0.2)}
+.light-mode .theme-btn{background:rgba(0,0,0,0.08)}
+
+/* Year filter */
+.year-bar{position:sticky;top:68px;z-index:150;background:var(--bg2);border-bottom:1px solid var(--border);padding:8px 4%;display:flex;align-items:center;gap:8px;overflow-x:auto}
+.year-bar::-webkit-scrollbar{display:none}
+.year-chip{padding:5px 14px;font-size:12px;font-weight:500;font-family:'Inter',sans-serif;background:var(--bg3);border:1px solid var(--border);border-radius:20px;cursor:pointer;color:var(--text2);transition:all 0.15s;white-space:nowrap}
+.year-chip:hover{border-color:var(--text3);color:var(--text)}
+.year-chip.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.year-label{font-size:12px;color:var(--text3);white-space:nowrap;flex-shrink:0}
 
 /* Hero */
 .hero{position:relative;height:80vh;min-height:500px;max-height:700px;display:flex;align-items:flex-end;padding:0 4% 80px;overflow:hidden;background:var(--bg2)}
-.hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);z-index:0}
-.hero-bg-img{position:absolute;inset:0;object-fit:cover;width:100%;height:100%;opacity:0.15;z-index:1}
-.hero-gradient{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,1) 0%,rgba(10,10,10,0.6) 40%,rgba(10,10,10,0.1) 100%);z-index:2}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);z-index:0}
+.hero-gradient{position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 0%,rgba(10,10,10,0.5) 40%,transparent 100%);z-index:2}
 .hero-content{position:relative;z-index:3;max-width:600px}
 .hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:4px 12px;border-radius:4px;margin-bottom:16px}
 .hero-title{font-family:'Fraunces',serif;font-size:clamp(28px,5vw,52px);font-weight:300;line-height:1.1;margin-bottom:12px;color:#fff}
+.light-mode .hero-title{color:var(--text)}
 .hero-title em{font-style:italic;color:var(--gold-light)}
 .hero-meta{font-size:14px;color:var(--text2);margin-bottom:20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.hero-meta .dot{width:3px;height:3px;border-radius:50%;background:var(--text3)}
 .hero-desc{font-size:15px;color:var(--text2);line-height:1.6;margin-bottom:28px;max-width:480px}
 .hero-actions{display:flex;gap:10px;flex-wrap:wrap}
 .btn-play{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:#fff;color:#000;font-size:16px;font-weight:700;border:none;border-radius:var(--radius);cursor:pointer;transition:background 0.15s;font-family:'Inter',sans-serif}
@@ -52,11 +70,13 @@ nav.scrolled{background:var(--bg2)}
 /* Rows */
 .content{padding:0 4% 60px;margin-top:-40px;position:relative;z-index:10}
 .row{margin-bottom:48px}
-.row-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.row-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:12px}
 .row-title{font-size:20px;font-weight:600;color:var(--text)}
+.row-meta{display:flex;align-items:center;gap:10px}
 .row-count{font-size:13px;color:var(--text3)}
+.row-progress{font-size:12px;color:var(--accent);font-weight:500}
 
-/* Scroll container */
+/* Scroll */
 .cards-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
 .cards-scroll::-webkit-scrollbar{height:4px}
 .cards-scroll::-webkit-scrollbar-track{background:transparent}
@@ -67,10 +87,9 @@ nav.scrolled{background:var(--bg2)}
 .vcard{flex:0 0 calc(20% - 8px);min-width:180px;max-width:280px;cursor:pointer;border-radius:var(--radius);overflow:hidden;background:var(--bg3);transition:transform 0.2s,box-shadow 0.2s;position:relative}
 .vcard:hover{transform:scale(1.06);box-shadow:0 8px 32px rgba(0,0,0,0.8);z-index:10}
 .vcard-thumb{position:relative;aspect-ratio:16/9;overflow:hidden;background:var(--bg4)}
-.vcard-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity 0.2s}
-.vcard-thumb-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--bg3),var(--bg4))}
+.vcard-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.vcard-thumb-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
 .vcard-thumb-placeholder svg{width:32px;height:32px;fill:var(--text3)}
-.vcard-duration{position:absolute;bottom:6px;right:6px;background:rgba(0,0,0,0.85);color:#fff;font-size:11px;font-weight:600;padding:2px 6px;border-radius:3px;font-family:'Inter',sans-serif}
 .vcard-play-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.5);opacity:0;transition:opacity 0.2s}
 .vcard:hover .vcard-play-overlay{opacity:1}
 .vcard-play-overlay svg{width:44px;height:44px;fill:#fff;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.5))}
@@ -78,35 +97,65 @@ nav.scrolled{background:var(--bg2)}
 .vcard-title{font-size:13px;font-weight:500;color:var(--text);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:5px}
 .vcard-meta{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .vcard-new{position:absolute;top:8px;left:8px;background:var(--accent);color:#fff;font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;border-radius:3px}
+.vcard-watched{position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.7);color:#22c55e;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;display:flex;align-items:center;gap:3px}
+.vcard-progress{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,0.2)}
+.vcard-progress-fill{height:100%;background:var(--accent)}
+.vcard-search-match .vcard-title em{background:rgba(229,9,20,0.3);border-radius:2px;font-style:normal}
 
-/* Modal player */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
+/* Recently watched row */
+.recent-row{margin-bottom:40px;padding:20px 0 0}
+.recent-row-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.recent-clear-btn{font-size:12px;color:var(--text3);background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif;transition:color 0.15s}
+.recent-clear-btn:hover{color:var(--text)}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
 .modal-overlay.open{display:flex}
-.modal{background:var(--bg2);border-radius:var(--radius-lg);width:100%;max-width:900px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.8)}
-.modal-video{position:relative;aspect-ratio:16/9;background:#000}
+.modal{background:var(--bg2);border-radius:var(--radius-lg);width:100%;max-width:980px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.8);display:flex;flex-direction:column;max-height:90vh}
+.modal-video{position:relative;aspect-ratio:16/9;background:#000;flex-shrink:0}
 .modal-video iframe{width:100%;height:100%;display:block;border:none}
-.modal-info{padding:20px 24px}
-.modal-title{font-family:'Fraunces',serif;font-size:22px;font-weight:400;color:var(--text);margin-bottom:6px}
-.modal-meta{font-size:13px;color:var(--text3);margin-bottom:10px;display:flex;gap:10px;flex-wrap:wrap}
-.modal-desc{font-size:14px;color:var(--text2);line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .modal-close{position:absolute;top:12px;right:12px;width:36px;height:36px;background:rgba(0,0,0,0.7);border:none;border-radius:50%;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;transition:background 0.15s}
 .modal-close:hover{background:rgba(255,255,255,0.2)}
+.modal-body{display:flex;flex:1;min-height:0;overflow:hidden}
+.modal-info{padding:20px 24px;flex:1;overflow-y:auto}
+.modal-title{font-family:'Fraunces',serif;font-size:20px;font-weight:400;color:var(--text);margin-bottom:8px;line-height:1.3}
+.modal-actions{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.modal-action-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:500;font-family:'Inter',sans-serif;border:1px solid var(--border);background:var(--bg3);color:var(--text2);cursor:pointer;transition:all 0.15s;text-decoration:none}
+.modal-action-btn:hover{border-color:var(--text3);color:var(--text)}
+.modal-action-btn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
+.modal-meta{font-size:13px;color:var(--text3);margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.modal-desc{font-size:14px;color:var(--text2);line-height:1.65;overflow:hidden;transition:max-height 0.3s}
+.modal-desc.collapsed{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.modal-read-more{font-size:12px;color:var(--accent);background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif;margin-top:6px;padding:0;display:block}
+.modal-related{padding:16px 20px;border-top:1px solid var(--border);flex-shrink:0}
+.modal-related-title{font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
+.modal-related-list{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.modal-related-list::-webkit-scrollbar{height:3px}
+.modal-related-card{flex:0 0 150px;cursor:pointer;transition:opacity 0.15s}
+.modal-related-card:hover{opacity:0.8}
+.modal-related-card img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:4px;background:var(--bg4);display:block;margin-bottom:5px}
+.modal-related-card-title{font-size:11px;color:var(--text2);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.modal-autoplay{display:flex;align-items:center;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.modal-autoplay label{font-size:13px;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:8px}
+.toggle-switch{width:36px;height:20px;background:var(--bg4);border-radius:10px;position:relative;cursor:pointer;transition:background 0.2s;flex-shrink:0}
+.toggle-switch.on{background:var(--accent)}
+.toggle-switch::after{content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:2px;left:2px;transition:left 0.2s}
+.toggle-switch.on::after{left:18px}
+.autoplay-countdown{font-size:12px;color:var(--text3)}
 
-/* Search */
-.search-bar{position:sticky;top:68px;z-index:100;background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 4%}
-.search-inner{max-width:500px;position:relative}
+/* Search bar */
+.search-bar{position:sticky;top:68px;z-index:140;background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 4%;display:flex;align-items:center;gap:12px}
+.search-inner{flex:1;max-width:500px;position:relative}
 .search-inner input{width:100%;padding:9px 12px 9px 36px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);font-size:14px;font-family:'Inter',sans-serif;color:var(--text);outline:none;transition:border 0.15s}
 .search-inner input:focus{border-color:var(--text3)}
 .search-inner input::placeholder{color:var(--text3)}
 .search-inner svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;stroke:var(--text3);fill:none;stroke-width:2}
+.search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;display:none}
 
-/* Empty */
+/* Empty / loading */
 .empty{text-align:center;padding:60px 20px;color:var(--text3)}
 .empty svg{width:48px;height:48px;stroke:var(--text3);fill:none;stroke-width:1.5;margin-bottom:12px}
 .empty h3{font-size:18px;color:var(--text2);margin-bottom:6px}
-.empty p{font-size:14px}
-
-/* Loading */
 .loading-row{display:flex;gap:8px;overflow:hidden}
 .skeleton{flex:0 0 calc(20% - 8px);min-width:180px;border-radius:var(--radius);background:linear-gradient(90deg,var(--bg3) 25%,var(--bg4) 50%,var(--bg3) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite}
 .skeleton-thumb{aspect-ratio:16/9}
@@ -114,18 +163,41 @@ nav.scrolled{background:var(--bg2)}
 .skeleton-text2{height:10px;margin:6px 10px 12px;width:60%;border-radius:3px}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg3);color:var(--text);padding:10px 20px;border-radius:var(--radius);font-size:13px;font-weight:500;z-index:999;opacity:0;transition:all 0.25s;pointer-events:none;border:1px solid var(--border)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Autoplay notification */
+.autoplay-bar{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);padding:12px 4%;display:flex;align-items:center;justify-content:space-between;z-index:300;transform:translateY(100%);transition:transform 0.3s;font-size:14px;gap:12px}
+.autoplay-bar.show{transform:translateY(0)}
+.autoplay-bar-info{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
+.autoplay-bar-thumb{width:60px;height:34px;object-fit:cover;border-radius:3px;flex-shrink:0}
+.autoplay-bar-title{font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.autoplay-bar-actions{display:flex;gap:8px;flex-shrink:0}
+.autoplay-btn{padding:7px 16px;font-size:13px;font-weight:500;font-family:'Inter',sans-serif;border-radius:var(--radius);cursor:pointer;border:none;transition:background 0.15s}
+.autoplay-btn-play{background:var(--accent);color:#fff}
+.autoplay-btn-play:hover{background:#c00}
+.autoplay-btn-cancel{background:var(--bg3);color:var(--text2)}
+.autoplay-btn-cancel:hover{background:var(--bg4)}
+.autoplay-progress-bar{height:3px;background:var(--border);position:absolute;bottom:0;left:0;right:0}
+.autoplay-progress-fill{height:100%;background:var(--accent);transition:width 0.1s linear}
+
 /* Footer */
 footer{border-top:1px solid var(--border);padding:2rem 4%;text-align:center}
 footer p{font-size:12px;color:var(--text3)}
-footer img{height:20px;width:auto;vertical-align:middle;opacity:0.3;margin-right:8px}
+footer img{height:20px;width:auto;vertical-align:middle;opacity:0.3;margin-right:8px;max-width:80px;object-fit:contain}
 
-@media(max-width:900px){.vcard{min-width:150px;flex:0 0 calc(33.33% - 8px)}}
+/* Responsive */
+@media(max-width:900px){
+  .vcard{min-width:150px;flex:0 0 calc(33.33% - 8px)}
+  .modal-body{flex-direction:column}
+}
 @media(max-width:600px){
   nav{padding:0 5%}
   .hero{height:60vh;padding:0 5% 60px}
   .content{padding:0 5% 40px}
   .vcard{min-width:130px;flex:0 0 calc(45% - 8px)}
-  .modal{border-radius:0}
+  .modal{border-radius:0;max-height:100vh;height:100vh}
   .modal-overlay{padding:0}
 }
 </style>
@@ -143,6 +215,7 @@ footer img{height:20px;width:auto;vertical-align:middle;opacity:0.3;margin-right
       <button class="lang-btn" onclick="setLang('fa')" id="lang-fa">&#x0641;&#x0627;&#x0631;&#x0633;&#x06CC;</button>
       <button class="lang-btn" onclick="setLang('zh')" id="lang-zh">&#x4e2d;&#x6587;</button>
     </div>
+    <button class="theme-btn" onclick="toggleTheme()" id="theme-btn" title="Toggle dark/light mode">&#9790;</button>
   </div>
 </nav>
 
@@ -156,12 +229,8 @@ footer img{height:20px;width:auto;vertical-align:middle;opacity:0.3;margin-right
       Now Streaming
     </div>
     <h1 class="hero-title">Watch <em>Sermons</em> &amp; Devotionals</h1>
-    <p class="hero-meta">
-      <span>St Peter's Anglican Church Hornsby</span>
-      <span class="dot"></span>
-      <span>English &amp; Farsi</span>
-    </p>
-    <p class="hero-desc">Stream sermons, daily devotionals and more from St Peter's Anglican Church Hornsby. Available in English and Farsi.</p>
+    <p class="hero-meta"><span>St Peter's Anglican Church Hornsby</span></p>
+    <p class="hero-desc">Stream sermons, daily devotionals and more. Available in English, Farsi and Mandarin.</p>
     <div class="hero-actions">
       <button class="btn-play" onclick="scrollToContent()">
         <svg viewBox="0 0 16 16"><path d="M3 2.5l10 5.5-10 5.5V2.5z"/></svg>
@@ -172,16 +241,32 @@ footer img{height:20px;width:auto;vertical-align:middle;opacity:0.3;margin-right
   </div>
 </div>
 
-<!-- Search -->
+<!-- Search + filter bar -->
 <div class="search-bar">
   <div class="search-inner">
     <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     <input type="text" id="search-input" placeholder="Search videos..." oninput="applySearch()">
+    <button class="search-clear" id="search-clear" onclick="clearSearch()">&#10005;</button>
   </div>
 </div>
 
-<!-- Content rows -->
+<!-- Year filter bar -->
+<div class="year-bar" id="year-bar" style="display:none">
+  <span class="year-label">Year:</span>
+  <button class="year-chip active" onclick="setYear('')" id="year-all">All</button>
+</div>
+
+<!-- Content -->
 <div class="content" id="content">
+  <div id="recent-section" style="display:none">
+    <div class="recent-row">
+      <div class="recent-row-header">
+        <div class="row-title" style="font-size:18px">Continue Watching</div>
+        <button class="recent-clear-btn" onclick="clearWatchHistory()">Clear history</button>
+      </div>
+      <div class="cards-scroll" id="recent-cards"></div>
+    </div>
+  </div>
   <div id="rows-container"></div>
   <div id="search-results" style="display:none">
     <div class="row">
@@ -200,82 +285,234 @@ footer img{height:20px;width:auto;vertical-align:middle;opacity:0.3;margin-right
 </div>
 
 <footer>
-  <p><img src="logo.png" alt="">St Peter's Anglican Church Hornsby &nbsp;·&nbsp; Video On Demand</p>
+  <p><img src="logo.png" alt="">St Peter's Anglican Church Hornsby &nbsp;&middot;&nbsp; Video On Demand</p>
 </footer>
 
-<!-- Modal player -->
+<!-- Modal -->
 <div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
-  <div class="modal">
+  <div class="modal" id="modal" ontouchstart="onModalTouchStart(event)" ontouchmove="onModalTouchMove(event)" ontouchend="onModalTouchEnd(event)">
     <div class="modal-video" style="position:relative">
       <button class="modal-close" onclick="closeModal()">&times;</button>
       <iframe id="modal-iframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
     </div>
-    <div class="modal-info">
-      <div class="modal-title" id="modal-title"></div>
-      <div class="modal-meta" id="modal-meta"></div>
-      <div class="modal-desc" id="modal-desc"></div>
+    <div class="modal-body">
+      <div class="modal-info">
+        <div class="modal-title" id="modal-title"></div>
+        <div class="modal-actions" id="modal-actions"></div>
+        <div class="modal-meta" id="modal-meta"></div>
+        <div class="modal-desc collapsed" id="modal-desc"></div>
+        <button class="modal-read-more" id="modal-read-more" onclick="toggleDesc()" style="display:none">Show more</button>
+        <div class="modal-autoplay">
+          <label>
+            <div class="toggle-switch" id="autoplay-toggle" onclick="toggleAutoplay()"></div>
+            Autoplay next
+          </label>
+          <span class="autoplay-countdown" id="autoplay-countdown"></span>
+        </div>
+      </div>
+      <div class="modal-related" id="modal-related" style="display:none">
+        <div class="modal-related-title">Up next</div>
+        <div class="modal-related-list" id="modal-related-list"></div>
+      </div>
     </div>
   </div>
 </div>
 
+<!-- Autoplay bar -->
+<div class="autoplay-bar" id="autoplay-bar">
+  <div class="autoplay-bar-info">
+    <img class="autoplay-bar-thumb" id="autoplay-bar-thumb" src="" alt="">
+    <div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:3px">Up next</div>
+      <div class="autoplay-bar-title" id="autoplay-bar-title"></div>
+    </div>
+  </div>
+  <div class="autoplay-bar-actions">
+    <button class="autoplay-btn autoplay-btn-cancel" onclick="cancelAutoplay()">Cancel</button>
+    <button class="autoplay-btn autoplay-btn-play" onclick="playAutoplayNow()">Play now</button>
+  </div>
+  <div class="autoplay-progress-bar"><div class="autoplay-progress-fill" id="autoplay-progress-fill" style="width:0%"></div></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
 <script src="config.js"></script>
 <script>
+// ── Config ────────────────────────────────────────────────────────────────
 var API_KEY = window.YT_API_KEY || '';
 
 var PLAYLISTS = {
   en: [
-    { id: 'PLHaDvAO4RKLI3ffTMQHlhStmJVCrywJxt', label: 'Sermons',            type: 'sermon' },
-    { id: 'PLHaDvAO4RKLLT1Se_M-dXlYEyK4097pYG', label: 'Daily Devotionals',  type: 'devo' },
+    { id: 'PLHaDvAO4RKLI3ffTMQHlhStmJVCrywJxt', label: 'Sermons',           type: 'sermon' },
+    { id: 'PLHaDvAO4RKLLT1Se_M-dXlYEyK4097pYG', label: 'Daily Devotionals', type: 'devo' },
   ],
   fa: [
     { id: 'PLHaDvAO4RKLJdyNvpxk6uNrRG00MyFkCi', label: '\u0645\u0648\u0639\u0638\u0647\u200c\u0647\u0627\u06CC \u0641\u0627\u0631\u0633\u06CC', type: 'sermon' },
   ],
+  zh: [
+    { id: 'PLHaDvAO4RKLLlOG4nMxzCAs6IkAs3ZaMu', label: '\u666e\u901a\u8bdd\u8bc1\u9053', type: 'sermon' },
+  ],
 };
 
-var allVideos = [];
-var currentLang = 'en';
+// ── State ─────────────────────────────────────────────────────────────────
+var allVideos = [], currentLang = 'en', currentYear = '', autoplayOn = true;
+var currentVideoId = '', currentVideoContext = [], currentVideoIdx = -1;
+var autoplayTimer = null, autoplaySeconds = 8;
+var WATCH_KEY = 'sph_watch', AUTOPLAY_KEY = 'sph_autoplay', THEME_KEY = 'sph_theme';
+var touchStartY = 0, touchStartX = 0;
 
-// Nav scroll effect
-window.addEventListener('scroll', function() {
-  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
-});
+// ── Init ──────────────────────────────────────────────────────────────────
+(function init() {
+  // Theme
+  if (localStorage.getItem(THEME_KEY) === 'light') document.body.classList.add('light-mode');
+  updateThemeBtn();
+  // Autoplay
+  autoplayOn = localStorage.getItem(AUTOPLAY_KEY) !== 'false';
+  updateAutoplayToggle();
+  // Nav scroll
+  window.addEventListener('scroll', function() {
+    document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
+  });
+  // Keyboard shortcuts
+  document.addEventListener('keydown', function(e) {
+    if (document.getElementById('modal-overlay').classList.contains('open')) {
+      if (e.key === 'Escape') closeModal();
+      if (e.key === 'ArrowRight') playNext();
+      if (e.key === 'ArrowLeft')  playPrev();
+    }
+    if (e.key === 'f' && !e.ctrlKey && !e.metaKey) {
+      document.getElementById('search-input').focus();
+      e.preventDefault();
+    }
+  });
+  // Deep link
+  if (window.location.hash && window.location.hash.startsWith('#video-')) {
+    var vid = window.location.hash.replace('#video-','');
+    loadPlaylists().then(function() { setTimeout(function(){ openVideoById(vid); }, 500); });
+  } else {
+    loadPlaylists();
+  }
+})();
 
-function scrollToContent() {
-  document.getElementById('content').scrollIntoView({ behavior: 'smooth' });
+// ── Theme ─────────────────────────────────────────────────────────────────
+function toggleTheme() {
+  document.body.classList.toggle('light-mode');
+  var isLight = document.body.classList.contains('light-mode');
+  localStorage.setItem(THEME_KEY, isLight ? 'light' : 'dark');
+  updateThemeBtn();
+}
+function updateThemeBtn() {
+  var btn = document.getElementById('theme-btn');
+  if (btn) btn.innerHTML = document.body.classList.contains('light-mode') ? '&#9728;' : '&#9790;';
 }
 
+// ── Language ──────────────────────────────────────────────────────────────
 function setLang(lang) {
   currentLang = lang;
-  document.getElementById('lang-en').classList.toggle('active', lang === 'en');
-  document.getElementById('lang-fa').classList.toggle('active', lang === 'fa');
-  document.getElementById('lang-zh').classList.toggle('active', lang === 'zh');
+  currentYear = '';
+  ['en','fa','zh'].forEach(function(l) {
+    document.getElementById('lang-' + l).classList.toggle('active', l === lang);
+  });
   document.getElementById('search-input').value = '';
+  document.getElementById('search-clear').style.display = 'none';
   document.getElementById('search-results').style.display = 'none';
   document.getElementById('rows-container').style.display = '';
   loadPlaylists();
 }
 
-// ── API ────────────────────────────────────────────────────────────────────
+function scrollToContent() {
+  document.getElementById('content').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ── Year filter ───────────────────────────────────────────────────────────
+function buildYearBar(videos) {
+  var years = {};
+  videos.forEach(function(v) {
+    var y = v.published ? v.published.substring(0,4) : '';
+    if (y && y >= '2018') years[y] = true;
+  });
+  var sortedYears = Object.keys(years).sort().reverse();
+  var bar = document.getElementById('year-bar');
+  if (!sortedYears.length) { bar.style.display = 'none'; return; }
+  bar.style.display = 'flex';
+  // Remove old year chips
+  bar.querySelectorAll('.year-chip:not(#year-all)').forEach(function(c){ c.remove(); });
+  sortedYears.forEach(function(y) {
+    var btn = document.createElement('button');
+    btn.className = 'year-chip';
+    btn.id = 'year-' + y;
+    btn.textContent = y;
+    btn.onclick = function() { setYear(y); };
+    bar.appendChild(btn);
+  });
+  document.getElementById('year-all').classList.add('active');
+}
+
+function setYear(year) {
+  currentYear = year;
+  document.querySelectorAll('.year-chip').forEach(function(c){
+    c.classList.toggle('active', (year === '' && c.id === 'year-all') || c.id === 'year-' + year);
+  });
+  renderAllRows();
+}
+
+function filterByYear(videos) {
+  if (!currentYear) return videos;
+  return videos.filter(function(v) { return v.published && v.published.startsWith(currentYear); });
+}
+
+// ── Watch history ─────────────────────────────────────────────────────────
+function getWatchData() {
+  try { return JSON.parse(localStorage.getItem(WATCH_KEY) || '{}'); } catch(e) { return {}; }
+}
+function saveWatchData(data) {
+  try { localStorage.setItem(WATCH_KEY, JSON.stringify(data)); } catch(e) {}
+}
+function markWatched(videoId) {
+  var data = getWatchData();
+  if (!data[videoId]) data[videoId] = {};
+  data[videoId].watchedAt = Date.now();
+  data[videoId].progress = data[videoId].progress || 0;
+  saveWatchData(data);
+  renderRecentRow();
+  renderAllRows(); // refresh watched badges
+}
+function clearWatchHistory() {
+  localStorage.removeItem(WATCH_KEY);
+  document.getElementById('recent-section').style.display = 'none';
+  renderAllRows();
+}
+
+function renderRecentRow() {
+  var data = getWatchData();
+  var ids = Object.keys(data).sort(function(a,b){ return (data[b].watchedAt||0) - (data[a].watchedAt||0); }).slice(0,10);
+  var recent = ids.map(function(id){ return allVideos.find(function(v){ return v.id === id; }); }).filter(Boolean);
+  var section = document.getElementById('recent-section');
+  if (!recent.length) { section.style.display = 'none'; return; }
+  section.style.display = '';
+  document.getElementById('recent-cards').innerHTML = recent.map(function(v) {
+    var progress = (data[v.id] || {}).progress || 0;
+    return videoCard(v, false, progress);
+  }).join('');
+}
+
+// ── API ───────────────────────────────────────────────────────────────────
 async function fetchPlaylistVideos(playlistId) {
-  var videos = [];
-  var pageToken = '';
-  var base = 'https://www.googleapis.com/youtube/v3/playlistItems'
-    + '?part=snippet&maxResults=50&key=' + API_KEY
-    + '&playlistId=' + playlistId;
+  var videos = [], pageToken = '';
+  var base = 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&key=' + API_KEY + '&playlistId=' + playlistId;
   do {
-    var url = base + (pageToken ? '&pageToken=' + pageToken : '');
-    var res = await fetch(url);
-    if (!res.ok) throw new Error('YouTube API error: ' + res.status);
+    var res = await fetch(base + (pageToken ? '&pageToken=' + pageToken : ''));
+    if (!res.ok) throw new Error('YouTube API error ' + res.status);
     var data = await res.json();
-    data.items.forEach(function(item) {
+    (data.items || []).forEach(function(item) {
       var snip = item.snippet;
       if (snip.title === 'Private video' || snip.title === 'Deleted video') return;
       videos.push({
         id:        snip.resourceId.videoId,
         title:     snip.title,
         desc:      snip.description,
-        thumb:     snip.thumbnails && (snip.thumbnails.high || snip.thumbnails.medium || snip.thumbnails.default)
-                     ? (snip.thumbnails.high || snip.thumbnails.medium || snip.thumbnails.default).url : '',
+        thumb:     snip.thumbnails ? ((snip.thumbnails.high||snip.thumbnails.medium||snip.thumbnails.default)||{}).url || '' : '',
         published: snip.publishedAt,
         channel:   snip.channelTitle,
       });
@@ -285,121 +522,137 @@ async function fetchPlaylistVideos(playlistId) {
   return videos;
 }
 
-// ── Render ─────────────────────────────────────────────────────────────────
+// ── Helpers ───────────────────────────────────────────────────────────────
 function fmtDate(iso) {
   if (!iso) return '';
-  var d = new Date(iso);
-  return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+  return new Date(iso).toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' });
+}
+function esc(s) { return s ? String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : ''; }
+function extractSeries(title) { var p = title.split('|'); return p.length > 1 ? p[p.length-1].trim() : ''; }
+function cleanTitle(title) { return title.split('|')[0].trim(); }
+function isNew(iso) { return iso && (Date.now() - new Date(iso).getTime()) < 7*24*60*60*1000; }
+function highlightSearch(text, q) {
+  if (!q) return esc(text);
+  var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi');
+  return esc(text).replace(re, '<em>$1</em>');
+}
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2500);
 }
 
-function esc(s) {
-  return s ? String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : '';
-}
-
-function isNew(iso) {
-  if (!iso) return false;
-  return (Date.now() - new Date(iso).getTime()) < 14 * 24 * 60 * 60 * 1000;
-}
-
-function extractSeries(title) {
-  var parts = title.split('|');
-  return parts.length > 1 ? parts[parts.length - 1].trim() : '';
-}
-
-function cleanTitle(title) {
-  return title.split('|')[0].trim();
-}
-
-function videoCard(v, showClean) {
+// ── Video card ────────────────────────────────────────────────────────────
+function videoCard(v, showClean, progress, searchQ) {
   var displayTitle = showClean ? cleanTitle(v.title) : v.title;
-  var safeTitle = v.title.replace(/'/g, '&#39;');
-  var safeDesc  = (v.desc || '').substring(0, 200).replace(/'/g, '&#39;');
-  return '<div class="vcard" onclick="openVideo(' +
-      '\'' + esc(v.id) + '\',' +
-      '\'' + safeTitle + '\',' +
-      '\'' + safeDesc  + '\',' +
-      '\'' + esc(v.published) + '\')">' +
-    (isNew(v.published) ? '<div class="vcard-new">New</div>' : '') +
+  var watchData = getWatchData();
+  var watched = !!watchData[v.id];
+  var prog = progress !== undefined ? progress : ((watchData[v.id]||{}).progress||0);
+  var safeId = esc(v.id);
+  var safeTitle = v.title.replace(/'/g,'&#39;');
+  var safeDesc = (v.desc||'').substring(0,200).replace(/'/g,'&#39;');
+  var safePub = v.published||'';
+
+  return '<div class="vcard' + (searchQ ? ' vcard-search-match' : '') + '" onclick="openVideo(\'' + safeId + '\',\'' + safeTitle + '\',\'' + safeDesc + '\',\'' + safePub + '\')">' +
+    (isNew(v.published) && !watched ? '<div class="vcard-new">New</div>' : '') +
+    (watched ? '<div class="vcard-watched">&#10003; Watched</div>' : '') +
     '<div class="vcard-thumb">' +
-      (v.thumb
-        ? '<img src="' + esc(v.thumb) + '" alt="" loading="lazy">'
-        : '<div class="vcard-thumb-placeholder"><svg viewBox="0 0 24 24"><path d="M15 10l-7 4 7 4V10z"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg></div>') +
+      (v.thumb ? '<img src="' + esc(v.thumb) + '" alt="" loading="lazy">' : '<div class="vcard-thumb-placeholder"><svg viewBox="0 0 24 24"><path d="M15 10l-7 4 7 4V10z"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg></div>') +
       '<div class="vcard-play-overlay"><svg viewBox="0 0 16 16"><path d="M3 2.5l10 5.5-10 5.5V2.5z"/></svg></div>' +
+      (prog > 0 && prog < 95 ? '<div class="vcard-progress"><div class="vcard-progress-fill" style="width:' + prog + '%"></div></div>' : '') +
     '</div>' +
     '<div class="vcard-info">' +
-      '<div class="vcard-title">' + esc(displayTitle) + '</div>' +
+      '<div class="vcard-title">' + (searchQ ? highlightSearch(displayTitle, searchQ) : esc(displayTitle)) + '</div>' +
       '<div class="vcard-meta"><span>' + fmtDate(v.published) + '</span></div>' +
     '</div>' +
   '</div>';
 }
 
 function skeletonRow() {
-  var html = '<div class="loading-row">';
-  for (var i = 0; i < 6; i++) {
-    html += '<div class="skeleton"><div class="skeleton-thumb"></div><div class="skeleton-text"></div><div class="skeleton-text2"></div></div>';
-  }
-  return html + '</div>';
+  var h = '<div class="loading-row">';
+  for (var i = 0; i < 6; i++) h += '<div class="skeleton"><div class="skeleton-thumb"></div><div class="skeleton-text"></div><div class="skeleton-text2"></div></div>';
+  return h + '</div>';
 }
 
-function makeRow(id, label, videos, showClean) {
+// ── Rows ──────────────────────────────────────────────────────────────────
+var renderedRows = []; // {label, videos, seriesKey}
+
+function makeRow(id, label, videos, showClean, seriesProgress) {
   var rowEl = document.createElement('div');
   rowEl.className = 'row';
   rowEl.id = 'row-' + id;
-  var cards = videos.map(function(v) { return videoCard(v, showClean); }).join('');
+  var filtered = filterByYear(videos);
+  var progressHtml = seriesProgress ? '<span class="row-progress">' + seriesProgress + '</span>' : '';
   rowEl.innerHTML =
     '<div class="row-header">' +
       '<div class="row-title">' + esc(label) + '</div>' +
-      '<div class="row-count">' + videos.length + ' video' + (videos.length !== 1 ? 's' : '') + '</div>' +
+      '<div class="row-meta">' + progressHtml + '<span class="row-count">' + filtered.length + ' video' + (filtered.length!==1?'s':'') + '</span></div>' +
     '</div>' +
-    '<div class="cards-scroll">' + cards + '</div>';
+    '<div class="cards-scroll">' + filtered.map(function(v){ return videoCard(v, showClean); }).join('') + '</div>';
   return rowEl;
 }
 
+function getSeriesProgress(videos) {
+  var watchData = getWatchData();
+  var watched = videos.filter(function(v){ return watchData[v.id]; }).length;
+  if (!watched) return '';
+  return watched + ' of ' + videos.length + ' watched';
+}
+
 function renderSeriesRows(videos, label, container) {
-  // Group by series extracted from "Title | Series" format
   var seriesMap = {}, noSeries = [];
   videos.forEach(function(v) {
     var s = extractSeries(v.title);
-    if (s) {
-      if (!seriesMap[s]) seriesMap[s] = [];
-      seriesMap[s].push(v);
-    } else {
-      noSeries.push(v);
-    }
+    if (s) { if (!seriesMap[s]) seriesMap[s] = []; seriesMap[s].push(v); }
+    else noSeries.push(v);
   });
 
-  var seriesKeys = Object.keys(seriesMap).sort(function(a, b) {
-    return new Date(seriesMap[b][0].published || 0) - new Date(seriesMap[a][0].published || 0);
+  var seriesKeys = Object.keys(seriesMap).sort(function(a,b) {
+    return new Date(seriesMap[b][0].published||0) - new Date(seriesMap[a][0].published||0);
   });
 
-  // Latest row — 12 most recent videos
-  var latest = videos.slice().sort(function(a, b) {
-    return new Date(b.published || 0) - new Date(a.published || 0);
-  }).slice(0, 12);
-  container.appendChild(makeRow('latest-' + label, label + ' — Latest', latest, false));
+  // Latest row
+  var latest = videos.slice().sort(function(a,b){ return new Date(b.published||0) - new Date(a.published||0); }).slice(0,12);
+  container.appendChild(makeRow('latest-' + label, label + ' \u2014 Latest', latest, false));
 
-  // Series rows
+  // Track context for autoplay
   seriesKeys.forEach(function(s) {
-    container.appendChild(makeRow('series-' + s, s, seriesMap[s], true));
+    var sv = seriesMap[s];
+    renderedRows.push({ label: s, videos: sv });
+    container.appendChild(makeRow('series-' + s, s, sv, true, getSeriesProgress(sv)));
   });
 
-  // Unsorted
   if (noSeries.length > 0 && seriesKeys.length > 0) {
-    container.appendChild(makeRow('other-' + label, label + ' — Other', noSeries, false));
+    container.appendChild(makeRow('other-' + label, label + ' \u2014 Other', noSeries, false));
   }
+}
+
+function renderAllRows() {
+  var container = document.getElementById('rows-container');
+  container.innerHTML = '';
+  renderedRows = [];
+  var playlists = PLAYLISTS[currentLang] || [];
+
+  playlists.forEach(function(pl) {
+    var tagged = allVideos.filter(function(v){ return v.playlistId === pl.id; });
+    if (!tagged.length) return;
+    renderSeriesRows(tagged, pl.label, container);
+  });
+
+  renderRecentRow();
 }
 
 async function loadPlaylists() {
   var playlists = PLAYLISTS[currentLang] || [];
   allVideos = [];
+  renderedRows = [];
   var container = document.getElementById('rows-container');
   container.innerHTML = '';
+  document.getElementById('year-bar').style.display = 'none';
 
-  // Skeleton placeholders
   playlists.forEach(function(pl) {
     var el = document.createElement('div');
-    el.className = 'row';
-    el.id = 'skel-' + pl.id;
+    el.className = 'row'; el.id = 'skel-' + pl.id;
     el.innerHTML = '<div class="row-header"><div class="row-title">' + esc(pl.label) + '</div><div class="row-count">Loading...</div></div>' + skeletonRow();
     container.appendChild(el);
   });
@@ -409,103 +662,286 @@ async function loadPlaylists() {
     var skel = document.getElementById('skel-' + pl.id);
     try {
       var videos = await fetchPlaylistVideos(pl.id);
-      var tagged = videos.map(function(v) { return Object.assign({}, v, { playlist: pl.label }); });
+      var tagged = videos.map(function(v){ return Object.assign({}, v, { playlist: pl.label, playlistId: pl.id }); });
       allVideos = allVideos.concat(tagged);
       if (skel) skel.remove();
-
-      if (!videos.length) {
-        var empty = document.createElement('div');
-        empty.className = 'row';
-        empty.innerHTML = '<div class="row-header"><div class="row-title">' + esc(pl.label) + '</div></div><div class="empty"><p>No videos found</p></div>';
-        container.appendChild(empty);
-        continue;
-      }
+      if (!videos.length) continue;
 
       renderSeriesRows(tagged, pl.label, container);
 
       if (i === 0) {
         var hero = tagged.slice().sort(function(a,b){ return new Date(b.published||0) - new Date(a.published||0); })[0];
         updateHero(hero, pl.label);
+        buildYearBar(allVideos);
       }
     } catch(e) {
-      if (skel) skel.innerHTML = '<div class="row-header"><div class="row-title">' + esc(pl.label) + '</div></div><div style="color:var(--text3);font-size:13px;padding:20px 0">Could not load — check API key.</div>';
-      console.error('Playlist error:', pl.id, e);
+      if (skel) skel.innerHTML = '<div class="row-header"><div class="row-title">' + esc(pl.label) + '</div></div><div style="color:var(--text3);font-size:13px;padding:20px 0">Could not load \u2014 check your API key in config.js.</div>';
+      console.error(e);
     }
   }
+
+  renderRecentRow();
+  checkDeepLink();
+  return;
 }
 
-
-function updateHero(v, playlistLabel) {
+// ── Hero ──────────────────────────────────────────────────────────────────
+function updateHero(v, label) {
+  if (!v) return;
   var hc = document.getElementById('hero-content');
-  if (!hc || !v) return;
+  var safeTitle = v.title.replace(/'/g,'&#39;');
+  var safeDesc = (v.desc||'').substring(0,200).replace(/'/g,'&#39;');
   hc.innerHTML =
-    '<div class="hero-badge"><svg width="12" height="12" viewBox="0 0 16 16" fill="#fff"><path d="M3 2.5l10 5.5-10 5.5V2.5z"/></svg>' + esc(playlistLabel) + '</div>' +
+    '<div class="hero-badge"><svg width="12" height="12" viewBox="0 0 16 16" fill="#fff"><path d="M3 2.5l10 5.5-10 5.5V2.5z"/></svg>' + esc(label) + '</div>' +
     '<h1 class="hero-title">' + esc(v.title) + '</h1>' +
-    '<p class="hero-meta"><span>' + fmtDate(v.published) + '</span><span class="dot"></span><span>' + esc(playlistLabel) + '</span></p>' +
-    '<p class="hero-desc">' + esc((v.desc || '').substring(0, 180)) + (v.desc && v.desc.length > 180 ? '...' : '') + '</p>' +
+    '<p class="hero-meta"><span>' + fmtDate(v.published) + '</span></p>' +
+    '<p class="hero-desc">' + esc((v.desc||'').substring(0,160)) + '</p>' +
     '<div class="hero-actions">' +
-      '<button class="btn-play" onclick="openVideo(\'' + esc(v.id) + '\',\'' + esc(v.title.replace(/'/g,"\\'")) + '\',\'' + esc((v.desc||'').substring(0,200).replace(/'/g,"\\'")) + '\',\'' + esc(v.published) + '\')">' +
+      '<button class="btn-play" onclick="openVideo(\'' + esc(v.id) + '\',\'' + safeTitle + '\',\'' + safeDesc + '\',\'' + esc(v.published) + '\')">' +
         '<svg viewBox="0 0 16 16"><path d="M3 2.5l10 5.5-10 5.5V2.5z"/></svg>Play' +
       '</button>' +
       '<a href="en.html" class="btn-more">Sermon Library</a>' +
     '</div>';
 }
 
-// ── Search ──────────────────────────────────────────────────────────────────
+// ── Modal ─────────────────────────────────────────────────────────────────
+function openVideo(videoId, title, desc, published) {
+  cancelAutoplay();
+  currentVideoId = videoId;
+
+  // Find context (series/playlist) for prev/next
+  currentVideoContext = [];
+  currentVideoIdx = -1;
+  renderedRows.forEach(function(row) {
+    var idx = row.videos.findIndex ? row.videos.findIndex(function(v){ return v.id === videoId; })
+      : (function(){ for(var i=0;i<row.videos.length;i++) if(row.videos[i].id===videoId) return i; return -1; })();
+    if (idx > -1) { currentVideoContext = row.videos; currentVideoIdx = idx; }
+  });
+  if (!currentVideoContext.length) {
+    var v = allVideos.find(function(x){ return x.id === videoId; });
+    if (v) { currentVideoContext = allVideos.filter(function(x){ return x.playlistId === v.playlistId; }); currentVideoIdx = currentVideoContext.findIndex ? currentVideoContext.findIndex(function(x){ return x.id===videoId; }) : 0; }
+  }
+
+  document.getElementById('modal-iframe').src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0&enablejsapi=1';
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-desc').textContent = desc;
+  document.getElementById('modal-desc').classList.add('collapsed');
+
+  var rmBtn = document.getElementById('modal-read-more');
+  if (desc && desc.length > 120) { rmBtn.style.display = 'block'; rmBtn.textContent = 'Show more'; }
+  else rmBtn.style.display = 'none';
+
+  document.getElementById('modal-meta').innerHTML =
+    '<span>' + fmtDate(published) + '</span>' +
+    (currentVideoIdx > 0 ? '<span>&middot;</span><span>' + currentVideoIdx + ' of ' + currentVideoContext.length + '</span>' : '');
+
+  // Action buttons
+  var shareUrl = window.location.href.split('#')[0] + '#video-' + videoId;
+  var ytUrl = 'https://www.youtube.com/watch?v=' + videoId;
+  document.getElementById('modal-actions').innerHTML =
+    '<button class="modal-action-btn" onclick="shareVideo(\'' + videoId + '\')">' +
+      '<svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>' +
+      'Share' +
+    '</button>' +
+    '<a class="modal-action-btn" href="' + ytUrl + '" target="_blank" rel="noopener">' +
+      '<svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>' +
+      'YouTube' +
+    '</a>';
+
+  // Related
+  renderRelated(videoId);
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  history.replaceState(null,'','#video-' + videoId);
+
+  markWatched(videoId);
+}
+
+function openVideoById(videoId) {
+  var v = allVideos.find(function(x){ return x.id === videoId; });
+  if (v) openVideo(v.id, v.title, v.desc||'', v.published||'');
+}
+
+function renderRelated(videoId) {
+  var related = document.getElementById('modal-related');
+  var list = document.getElementById('modal-related-list');
+  var nextVideos = currentVideoContext.slice(currentVideoIdx + 1, currentVideoIdx + 6);
+  if (!nextVideos.length) { related.style.display = 'none'; return; }
+  related.style.display = '';
+  list.innerHTML = nextVideos.map(function(v) {
+    var safeTitle = v.title.replace(/'/g,'&#39;');
+    var safeDesc = (v.desc||'').substring(0,200).replace(/'/g,'&#39;');
+    return '<div class="modal-related-card" onclick="openVideo(\'' + esc(v.id) + '\',\'' + safeTitle + '\',\'' + safeDesc + '\',\'' + esc(v.published||'') + '\')">' +
+      (v.thumb ? '<img src="' + esc(v.thumb) + '" alt="">' : '') +
+      '<div class="modal-related-card-title">' + esc(cleanTitle(v.title)) + '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function closeModal() {
+  cancelAutoplay();
+  document.getElementById('modal-iframe').src = '';
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  history.replaceState(null,'', window.location.pathname);
+  currentVideoId = '';
+  renderAllRows(); // refresh watched badges
+}
+
+function toggleDesc() {
+  var desc = document.getElementById('modal-desc');
+  var btn = document.getElementById('modal-read-more');
+  var collapsed = desc.classList.toggle('collapsed');
+  btn.textContent = collapsed ? 'Show more' : 'Show less';
+}
+
+// Prev / next
+function playNext() {
+  if (currentVideoIdx < currentVideoContext.length - 1) {
+    var v = currentVideoContext[currentVideoIdx + 1];
+    openVideo(v.id, v.title, v.desc||'', v.published||'');
+  }
+}
+function playPrev() {
+  if (currentVideoIdx > 0) {
+    var v = currentVideoContext[currentVideoIdx - 1];
+    openVideo(v.id, v.title, v.desc||'', v.published||'');
+  }
+}
+
+// Share
+function shareVideo(videoId) {
+  var url = window.location.href.split('#')[0] + '#video-' + videoId;
+  if (navigator.clipboard) { navigator.clipboard.writeText(url).then(function(){ showToast('Link copied!'); }); }
+  else { var t = document.createElement('textarea'); t.value=url; document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t); showToast('Link copied!'); }
+}
+
+// ── Autoplay ──────────────────────────────────────────────────────────────
+function toggleAutoplay() {
+  autoplayOn = !autoplayOn;
+  localStorage.setItem(AUTOPLAY_KEY, autoplayOn);
+  updateAutoplayToggle();
+}
+function updateAutoplayToggle() {
+  var tog = document.getElementById('autoplay-toggle');
+  if (tog) tog.classList.toggle('on', autoplayOn);
+}
+
+// Called when YouTube video ends (via postMessage)
+window.addEventListener('message', function(e) {
+  try {
+    var data = JSON.parse(e.data);
+    if (data.event === 'onStateChange' && data.info === 0) {
+      // Video ended
+      if (autoplayOn && currentVideoIdx < currentVideoContext.length - 1) {
+        scheduleAutoplay();
+      }
+    }
+  } catch(err) {}
+});
+
+function scheduleAutoplay() {
+  if (currentVideoIdx >= currentVideoContext.length - 1) return;
+  var next = currentVideoContext[currentVideoIdx + 1];
+  var bar = document.getElementById('autoplay-bar');
+  var titleEl = document.getElementById('autoplay-bar-title');
+  var thumbEl = document.getElementById('autoplay-bar-thumb');
+  var fill = document.getElementById('autoplay-progress-fill');
+  var countdown = document.getElementById('autoplay-countdown');
+
+  titleEl.textContent = cleanTitle(next.title);
+  thumbEl.src = next.thumb || '';
+  bar.classList.add('show');
+  fill.style.width = '0%';
+
+  var elapsed = 0, total = autoplaySeconds * 10;
+  autoplayTimer = setInterval(function() {
+    elapsed++;
+    var pct = (elapsed / total * 100);
+    fill.style.width = pct + '%';
+    var secsLeft = Math.ceil((total - elapsed) / 10);
+    if (countdown) countdown.textContent = 'in ' + secsLeft + 's';
+    if (elapsed >= total) {
+      cancelAutoplay();
+      openVideo(next.id, next.title, next.desc||'', next.published||'');
+    }
+  }, 100);
+}
+
+function cancelAutoplay() {
+  if (autoplayTimer) { clearInterval(autoplayTimer); autoplayTimer = null; }
+  var bar = document.getElementById('autoplay-bar');
+  if (bar) bar.classList.remove('show');
+  var countdown = document.getElementById('autoplay-countdown');
+  if (countdown) countdown.textContent = '';
+}
+
+function playAutoplayNow() {
+  cancelAutoplay();
+  if (currentVideoIdx < currentVideoContext.length - 1) {
+    var v = currentVideoContext[currentVideoIdx + 1];
+    openVideo(v.id, v.title, v.desc||'', v.published||'');
+  }
+}
+
+// ── Search ────────────────────────────────────────────────────────────────
 function applySearch() {
   var q = document.getElementById('search-input').value.toLowerCase().trim();
+  var clearBtn = document.getElementById('search-clear');
+  clearBtn.style.display = q ? 'block' : 'none';
   var rows = document.getElementById('rows-container');
   var results = document.getElementById('search-results');
-  var cards = document.getElementById('search-cards');
-  var empty = document.getElementById('search-empty');
-  var count = document.getElementById('search-count');
+  var yearBar = document.getElementById('year-bar');
 
   if (!q) {
     results.style.display = 'none';
     rows.style.display = '';
+    yearBar.style.display = allVideos.length ? 'flex' : 'none';
     return;
   }
 
   rows.style.display = 'none';
+  yearBar.style.display = 'none';
   results.style.display = '';
 
   var matches = allVideos.filter(function(v) {
-    return (v.title + ' ' + (v.desc || '') + ' ' + (v.playlist || '')).toLowerCase().includes(q);
+    return (v.title + ' ' + (v.desc||'') + ' ' + (v.playlist||'')).toLowerCase().includes(q);
   });
 
-  count.textContent = matches.length + ' result' + (matches.length !== 1 ? 's' : '');
+  document.getElementById('search-count').textContent = matches.length + ' result' + (matches.length!==1?'s':'');
 
-  if (matches.length === 0) {
-    cards.innerHTML = '';
-    empty.style.display = '';
+  if (!matches.length) {
+    document.getElementById('search-cards').innerHTML = '';
+    document.getElementById('search-empty').style.display = '';
   } else {
-    empty.style.display = 'none';
-    cards.innerHTML = matches.map(function(v, i) { return videoCard(v, i); }).join('');
+    document.getElementById('search-empty').style.display = 'none';
+    document.getElementById('search-cards').innerHTML = matches.map(function(v){ return videoCard(v, false, undefined, q); }).join('');
   }
 }
 
-// ── Modal ───────────────────────────────────────────────────────────────────
-function openVideo(videoId, title, desc, published) {
-  document.getElementById('modal-iframe').src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0';
-  document.getElementById('modal-title').textContent = title;
-  document.getElementById('modal-desc').textContent = desc;
-  document.getElementById('modal-meta').textContent = fmtDate(published);
-  document.getElementById('modal-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
+function clearSearch() {
+  document.getElementById('search-input').value = '';
+  applySearch();
+  document.getElementById('search-input').focus();
 }
 
-function closeModal() {
-  document.getElementById('modal-iframe').src = '';
-  document.getElementById('modal-overlay').classList.remove('open');
-  document.body.style.overflow = '';
+// ── Swipe to close modal ──────────────────────────────────────────────────
+function onModalTouchStart(e) { touchStartY = e.touches[0].clientY; touchStartX = e.touches[0].clientX; }
+function onModalTouchMove(e) {}
+function onModalTouchEnd(e) {
+  var dy = e.changedTouches[0].clientY - touchStartY;
+  var dx = Math.abs(e.changedTouches[0].clientX - touchStartX);
+  if (dy > 80 && dx < 60) closeModal();
 }
 
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeModal();
-});
-
-// ── Init ────────────────────────────────────────────────────────────────────
-loadPlaylists();
+// ── Deep link ─────────────────────────────────────────────────────────────
+function checkDeepLink() {
+  if (window.location.hash && window.location.hash.startsWith('#video-')) {
+    var vid = window.location.hash.replace('#video-','');
+    openVideoById(vid);
+  }
+}
 </script>
 </body>
 </html>
