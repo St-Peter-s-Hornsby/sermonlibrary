@@ -100,6 +100,50 @@ nav{background:var(--bg);border-bottom:1px solid var(--border);position:sticky;t
 footer{border-top:1px solid var(--border);padding:1.5rem 2rem;text-align:center;margin-top:3rem;background:var(--bg)}
 footer p{font-size:12px;color:var(--text3)}
 footer img{height:20px;width:auto;max-width:100px;vertical-align:middle;opacity:0.4;margin-right:6px;object-fit:contain}
+/* ── Player controls ── */
+.audio-player-inner{display:flex;flex-direction:column;gap:8px}
+.player-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.speed-btn{padding:3px 8px;font-size:11px;font-family:'Inter',sans-serif;font-weight:600;background:var(--bg);border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--text2);transition:all 0.15s;letter-spacing:0.02em}
+.speed-btn:hover,.speed-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.sleep-btn{padding:3px 8px;font-size:11px;font-family:'Inter',sans-serif;background:var(--bg);border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--text2);transition:all 0.15s;display:flex;align-items:center;gap:4px}
+.sleep-btn:hover{border-color:var(--border2);color:var(--text)}
+.sleep-btn.active{background:#fef3c7;color:#92400e;border-color:#fcd34d}
+.resume-badge{font-size:11px;color:var(--blue);font-weight:500;display:flex;align-items:center;gap:4px}
+/* ── Related sermons ── */
+.related-section{margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.related-label{font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.related-list{display:flex;flex-direction:column;gap:6px}
+.related-item{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:var(--radius);background:var(--bg2);cursor:pointer;transition:background 0.15s;text-decoration:none;border:1px solid transparent}
+.related-item:hover{background:var(--bg3);border-color:var(--border)}
+.related-item img{width:36px;height:36px;border-radius:4px;object-fit:cover;flex-shrink:0;background:var(--bg3)}
+.related-item-body{flex:1;min-width:0}
+.related-item-title{font-size:12px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.related-item-meta{font-size:11px;color:var(--text3)}
+/* ── Recently listened ── */
+.recent-row{margin-bottom:1rem;padding:1rem 1.5rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg)}
+.recent-row-label{font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.recent-clear{font-size:11px;color:var(--blue);background:none;border:none;cursor:pointer;font-family:inherit;padding:0}
+.recent-clear:hover{text-decoration:underline}
+.recent-cards{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.recent-cards::-webkit-scrollbar{height:3px}
+.recent-cards::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.recent-card{flex:0 0 160px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:8px;cursor:pointer;transition:all 0.15s}
+.recent-card:hover{background:var(--bg3);border-color:var(--border2)}
+.recent-card img{width:100%;aspect-ratio:1;border-radius:4px;object-fit:cover;margin-bottom:6px;background:var(--bg3)}
+.recent-card-title{font-size:11px;font-weight:500;color:var(--text);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:3px}
+.recent-card-meta{font-size:10px;color:var(--text3)}
+.recent-progress{height:2px;background:var(--border);border-radius:1px;margin-top:5px;overflow:hidden}
+.recent-progress-fill{height:100%;background:var(--accent);border-radius:1px}
+/* ── Share ── */
+.btn-share{display:inline-flex;align-items:center;gap:5px;padding:6px 10px;background:var(--bg2);color:var(--text2);font-size:12px;font-weight:500;font-family:'Inter',sans-serif;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:all 0.15s;white-space:nowrap}
+.btn-share:hover{background:var(--bg3);border-color:var(--border2);color:var(--text)}
+.btn-share svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2}
+.share-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:8px 20px;border-radius:var(--radius);font-size:13px;font-weight:500;z-index:999;opacity:0;transition:opacity 0.2s;pointer-events:none}
+.share-toast.show{opacity:1}
+/* ── Sleep timer indicator ── */
+.sleep-indicator{position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;padding:8px 16px;border-radius:var(--radius);font-size:13px;font-weight:500;z-index:999;display:none;align-items:center;gap:8px;box-shadow:0 4px 16px rgba(0,0,0,0.2)}
+.sleep-indicator button{background:none;border:none;color:#fff;cursor:pointer;font-size:14px;opacity:0.8;padding:0;line-height:1}
+.sleep-indicator button:hover{opacity:1}
 @media(max-width:900px){
   .nav-inner{padding:0 1rem}
   .layout{grid-template-columns:1fr;padding:0;gap:0}
@@ -211,6 +255,7 @@ footer img{height:20px;width:auto;max-width:100px;vertical-align:middle;opacity:
       </div>
     </div>
     <div id="error-area"></div>
+    <div id="recent-row" style="display:none"></div>
     <div id="sermon-list"></div>
     <div class="pagination" id="pagination"></div>
   </div>
@@ -423,15 +468,57 @@ function esc(s) { return s ? String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'
 
 function card(s, first) {
   var tags = '';
-  if (s.series)  tags += '<span class="tag tag-series">'  + esc(s.series)  + '</span>';
+  if (s.series)  tags += '<span class="tag tag-series" onclick="event.stopPropagation();filterBySeries(\'' + esc(s.series) + '\')" style="cursor:pointer">'  + esc(s.series)  + '</span>';
   if (s.service) tags += '<span class="tag tag-service">' + esc(s.service) + '</span>';
-  if (s.book)    tags += '<span class="tag tag-book">'    + esc(s.book)    + '</span>';
+  if (s.book)    tags += '<span class="tag tag-book" onclick="event.stopPropagation();openBible(\'' + esc(s.book) + '\')" style="cursor:pointer" title="Open in Bible Gateway">' + esc(s.book) + ' \u{1F4D6}</span>';
   var date = fmtDate(s.parsedDate), dur = fmtDur(s.duration);
   var hasAudio = !!s.audioUrl;
+  var saved = getResumePos(String(s.id));
+  var resumeHint = (saved > 5) ? '<span class="resume-badge">&#9654; Resume ' + fmtSec(saved) + '</span>' : '';
   var playIcon  = '<svg viewBox="0 0 16 16"><path d="M3 2.5l10 5.5-10 5.5V2.5z"/></svg>';
   var pauseIcon = '<svg viewBox="0 0 16 16"><rect x="3" y="2" width="3.5" height="12"/><rect x="9.5" y="2" width="3.5" height="12"/></svg>';
   var watchIcon = '<svg viewBox="0 0 20 14" style="fill:#fff;width:13px;height:9px"><path d="M19.5 2.2A2.5 2.5 0 0017.6.3C16.1 0 10 0 10 0S3.9 0 2.4.3A2.5 2.5 0 00.5 2.2 26 26 0 000 7a26 26 0 00.5 4.8 2.5 2.5 0 001.9 1.9C3.9 14 10 14 10 14s6.1 0 7.6-.3a2.5 2.5 0 001.9-1.9A26 26 0 0020 7a26 26 0 00-.5-4.8zM8 10V4l5 3-5 3z"/></svg>';
+  var shareIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>';
   var img = s.image || channelImage;
+
+  var audioPlayerHtml = '';
+  if (hasAudio) {
+    var speedBtns = [0.75,1,1.25,1.5,2].map(function(sp){
+      return '<button class="speed-btn' + (sp===1?' active':'') + '" onclick="setSpeed(\'' + s.id + '\',' + sp + ',this)">' + sp + 'x</button>';
+    }).join('');
+    var sleepClk = 'toggleSleep(\'' + s.id + '\',this)';
+    var sleepIcon = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+    audioPlayerHtml =
+      '<div class="audio-player" id="player-' + s.id + '">' +
+        '<div class="audio-player-inner">' +
+          resumeHint +
+          '<audio controls preload="none" src="' + esc(s.audioUrl) + '" id="audio-' + s.id + '"></audio>' +
+          '<div class="player-controls">' +
+            '<span style="font-size:11px;color:var(--text3);font-weight:500">Speed:</span>' +
+            speedBtns +
+            '<button class="sleep-btn" id="sleep-btn-' + s.id + '" onclick="' + sleepClk + '">' + sleepIcon + 'Sleep</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+  }
+
+  var related = getRelated(s);
+  var relatedHtml = '';
+  if (related.length > 0) {
+    relatedHtml = '<div class="related-section"><div class="related-label">You might also like</div><div class="related-list">' +
+      related.map(function(r) {
+        var ri = r.image || channelImage;
+        return '<div class="related-item" onclick="jumpToSermon(\'' + r.id + '\')">' +
+          (ri ? '<img src="' + esc(ri) + '" alt="">' : '') +
+          '<div class="related-item-body">' +
+            '<div class="related-item-title">' + esc(r.title) + '</div>' +
+            '<div class="related-item-meta">' + esc(r.speaker) + (r.series ? ' &middot; ' + esc(r.series) : '') + '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('') +
+    '</div></div>';
+  }
+
   return '<div class="sermon-card' + (first ? ' latest' : '') + '" id="card-' + s.id + '">' +
     (img ? '<img class="sermon-art" src="' + esc(img) + '" alt="" loading="lazy">' : '') +
     '<div class="sermon-body">' +
@@ -442,8 +529,9 @@ function card(s, first) {
         (dur  ? '<span class="dot"></span><span>' + esc(dur) + '</span>' : '') +
       '</div>' +
       (s.desc ? '<div class="sermon-desc">' + esc(s.desc) + '</div>' : '') +
-      (hasAudio ? '<div class="audio-player" id="player-' + s.id + '"><audio controls preload="none" src="' + esc(s.audioUrl) + '"></audio></div>' : '') +
+      audioPlayerHtml +
       (s.videoId ? '<div class="video-player" id="video-' + s.id + '"></div>' : '') +
+      relatedHtml +
     '</div>' +
     '<div class="sermon-side">' +
       '<div class="sermon-date">' + date + '</div>' +
@@ -452,8 +540,195 @@ function card(s, first) {
         : '<a href="' + esc(s.link||'#') + '" target="_blank" rel="noopener" class="btn-listen">' + playIcon + 'Listen</a>') +
       (s.videoId ? '<button class="btn-listen btn-watch" onclick="toggleVideo(\'' + s.videoId + '\',\'' + s.id + '\',this)">' + watchIcon + 'Watch</button>' : '') +
       (s.audioUrl ? '<button class="btn-listen btn-dl" id="dlbtn-' + s.id + '" onclick="handleDownload(event,' + s.id + ')">' + dlIcon + '</button>' : '') +
+      '<button class="btn-share" onclick="shareSermon(\'' + s.id + '\')" title="Share">' + shareIcon + '</button>' +
     '</div>' +
   '</div>';
+}
+
+
+// ── Resume position ──────────────────────────────────────────────────────
+var RESUME_KEY = 'sph_resume';
+function getResumePos(id) {
+  try { return parseFloat(JSON.parse(localStorage.getItem(RESUME_KEY) || '{}')[id] || 0) || 0; } catch(e) { return 0; }
+}
+function saveResumePos(id, pos) {
+  try {
+    var d = JSON.parse(localStorage.getItem(RESUME_KEY) || '{}');
+    d[id] = Math.floor(pos);
+    localStorage.setItem(RESUME_KEY, JSON.stringify(d));
+  } catch(e) {}
+}
+function fmtSec(s) {
+  s = Math.floor(s);
+  return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
+}
+
+// ── Recently listened ─────────────────────────────────────────────────────
+var RECENT_KEY = 'sph_recent';
+function getRecent() {
+  try { return JSON.parse(localStorage.getItem(RECENT_KEY) || '[]'); } catch(e) { return []; }
+}
+function addRecent(id) {
+  var r = getRecent().filter(function(x){ return x !== String(id); });
+  r.unshift(String(id));
+  r = r.slice(0, 12);
+  localStorage.setItem(RECENT_KEY, JSON.stringify(r));
+  renderRecentRow();
+}
+function renderRecentRow() {
+  var ids = getRecent();
+  var row = document.getElementById('recent-row');
+  if (!row || !ids.length || !allSermons.length) { if(row) row.style.display='none'; return; }
+  var sermons = ids.map(function(id){ return allSermons.find(function(s){ return String(s.id)===id; }); }).filter(Boolean);
+  if (!sermons.length) { row.style.display='none'; return; }
+  row.style.display='';
+  var pos = JSON.parse(localStorage.getItem(RESUME_KEY)||'{}');
+  row.innerHTML = '<div class="recent-row-label"><span>Recently Listened</span><button class="recent-clear" onclick="clearRecent()">Clear</button></div>' +
+    '<div class="recent-cards">' +
+    sermons.map(function(s) {
+      var img = s.image || channelImage;
+      var p = parseFloat(pos[String(s.id)] || 0);
+      var pct = (p && s.duration) ? Math.min(100, Math.round(p / parseInt(s.duration) * 100)) : 0;
+      return '<div class="recent-card" onclick="jumpToSermon(\'' + s.id + '\')">' +
+        (img ? '<img src="' + esc(img) + '" alt="">' : '') +
+        '<div class="recent-card-title">' + esc(s.title) + '</div>' +
+        '<div class="recent-card-meta">' + esc(s.speaker) + '</div>' +
+        (pct > 0 ? '<div class="recent-progress"><div class="recent-progress-fill" style="width:'+pct+'%"></div></div>' : '') +
+      '</div>';
+    }).join('') +
+    '</div>';
+}
+function clearRecent() {
+  localStorage.removeItem(RECENT_KEY);
+  var row = document.getElementById('recent-row');
+  if (row) row.style.display='none';
+}
+
+// ── Related sermons ───────────────────────────────────────────────────────
+function getRelated(s) {
+  return allSermons.filter(function(r) {
+    if (r.id === s.id) return false;
+    return (s.series && r.series === s.series) || r.speaker === s.speaker;
+  }).slice(0, 3);
+}
+
+// ── Jump to sermon ────────────────────────────────────────────────────────
+function jumpToSermon(id) {
+  // Find which page it's on, navigate there, then scroll to card
+  var idx = filtered.findIndex ? filtered.findIndex(function(s){ return String(s.id)===String(id); })
+    : (function(){ for(var i=0;i<filtered.length;i++) if(String(filtered[i].id)===String(id)) return i; return -1; })();
+  if (idx === -1) {
+    // Not in current filter — clear filters and try again
+    clearFilters();
+    setTimeout(function(){ jumpToSermon(id); }, 100);
+    return;
+  }
+  var page = Math.floor(idx / PER_PAGE) + 1;
+  if (page !== currentPage) { currentPage = page; render(); }
+  setTimeout(function() {
+    var el = document.getElementById('card-' + id);
+    if (el) { el.scrollIntoView({behavior:'smooth', block:'center'}); el.style.background='var(--bg3)'; setTimeout(function(){ el.style.background=''; }, 1200); }
+  }, 100);
+}
+
+// ── Playback speed ────────────────────────────────────────────────────────
+function setSpeed(id, speed, btn) {
+  var audio = document.getElementById('audio-' + id);
+  if (audio) audio.playbackRate = speed;
+  var controls = btn.closest('.player-controls');
+  if (controls) controls.querySelectorAll('.speed-btn').forEach(function(b){ b.classList.toggle('active', b === btn); });
+}
+
+// ── Sleep timer ───────────────────────────────────────────────────────────
+var sleepTimer = null, sleepRemaining = 0, sleepAudioId = null;
+var SLEEP_OPTIONS = [15,30,45,60];
+var sleepOptionIdx = 0;
+
+function toggleSleep(id, btn) {
+  if (sleepTimer && sleepAudioId === id) {
+    cancelSleep();
+    btn.classList.remove('active');
+    btn.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Sleep';
+    return;
+  }
+  var mins = SLEEP_OPTIONS[sleepOptionIdx % SLEEP_OPTIONS.length];
+  sleepOptionIdx++;
+  startSleep(id, mins * 60, btn);
+}
+
+function startSleep(id, seconds, btn) {
+  if (sleepTimer) clearInterval(sleepTimer);
+  sleepRemaining = seconds;
+  sleepAudioId = id;
+  var ind = document.getElementById('sleep-indicator');
+  if (ind) ind.style.display = 'flex';
+  if (btn) { btn.classList.add('active'); }
+  updateSleepDisplay();
+  sleepTimer = setInterval(function() {
+    sleepRemaining--;
+    updateSleepDisplay();
+    if (sleepRemaining <= 0) {
+      var audio = document.getElementById('audio-' + id);
+      if (audio) audio.pause();
+      cancelSleep();
+    }
+  }, 1000);
+}
+
+function updateSleepDisplay() {
+  var el = document.getElementById('sleep-text');
+  if (el) el.textContent = 'Sleep in ' + fmtSec(sleepRemaining);
+}
+
+function cancelSleep() {
+  if (sleepTimer) clearInterval(sleepTimer);
+  sleepTimer = null; sleepAudioId = null; sleepRemaining = 0;
+  var ind = document.getElementById('sleep-indicator');
+  if (ind) ind.style.display = 'none';
+  // Reset all sleep buttons
+  document.querySelectorAll('.sleep-btn').forEach(function(b){
+    b.classList.remove('active');
+    b.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Sleep';
+  });
+}
+
+// ── Share ─────────────────────────────────────────────────────────────────
+function shareSermon(id, title) {
+  var url = window.location.href.split('#')[0] + '#sermon-' + id;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(function() { showShareToast('Link copied!'); });
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = url; document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta); showShareToast('Link copied!');
+  }
+}
+function showShareToast(msg) {
+  var t = document.getElementById('share-toast');
+  if (!t) return;
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2500);
+}
+
+// ── Bible Gateway ─────────────────────────────────────────────────────────
+function openBible(book) {
+  window.open('https://www.biblegateway.com/passage/?search=' + encodeURIComponent(book) + '&version=NIV', '_blank');
+}
+
+// ── Filter by series tag click ────────────────────────────────────────────
+function filterBySeries(series) {
+  document.getElementById('filter-series').value = series;
+  applyFilters();
+  document.getElementById('sidebar').scrollIntoView({behavior:'smooth'});
+}
+
+// ── Deep link on load ─────────────────────────────────────────────────────
+function checkDeepLink() {
+  var hash = window.location.hash;
+  if (hash && hash.startsWith('#sermon-')) {
+    var id = hash.replace('#sermon-', '');
+    setTimeout(function(){ jumpToSermon(id); }, 500);
+  }
 }
 
 function togglePlayer(id, btn) {
@@ -477,8 +752,19 @@ function togglePlayer(id, btn) {
     btn.innerHTML = playIcon + 'Listen';
   } else {
     player.style.display = 'block';
-    var a = player.querySelector('audio');
-    if (a) { var p = a.play(); if (p && p.catch) p.catch(function(){}); }
+    var audio = document.getElementById('audio-' + id);
+    if (audio) {
+      // Restore resume position
+      var saved = getResumePos(String(id));
+      if (saved > 5) audio.currentTime = saved;
+      // Save position every 5 seconds
+      audio.ontimeupdate = function() {
+        if (audio.currentTime > 5) saveResumePos(String(id), audio.currentTime);
+      };
+      var p = audio.play(); if (p && p.catch) p.catch(function(){});
+      // Track in recently listened
+      addRecent(id);
+    }
     btn.innerHTML = pauseIcon + 'Pause';
   }
 }
@@ -521,6 +807,7 @@ function render() {
   }
   list.innerHTML = '<div class="sermon-grid">' + page.map(function(s,i){ return card(s, i===0 && currentPage===1); }).join('') + '</div>';
   renderPag(pages);
+  renderRecentRow();
 }
 
 function renderPag(pages) {
@@ -585,6 +872,7 @@ function toggleFilters() {
 loadFeed();
 loadSubscribeLinks();
 initDownloads();
+checkDeepLink();
 </script>
 </body>
 </html>
